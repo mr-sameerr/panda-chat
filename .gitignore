@@ -1,5 +1,4 @@
 # Dependency directory
-public/assets/vendor/
 node_modules/
 package-lock.json
 uploads/
