@@ -2,7 +2,7 @@ require('dotenv').config()
 const moment = require('moment')
 const { default: mongoose } = require('mongoose')
 const User = require('../models/userModel')
-// const emailConfig = require('../helpers/email')
+const emailConfig = require('../helpers/email')
 const userUtils = require('../utils/userUtils')
 const accountVerification = require('../models/accountVerificationModel')
 class authService {
