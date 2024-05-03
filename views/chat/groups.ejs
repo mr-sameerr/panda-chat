@@ -1,0 +1,119 @@
+<main class="content">
+    <div class="container p-0">
+        <h1 class="h3 mb-3">Groups</h1>
+        <div class="card">
+            <div class="row g-0">
+                <div class="col-12 col-md-5 col-xl-3 border-right">
+                    <div class="px-3 d-none d-md-block search-box">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <input type="text" class="form-control my-3" placeholder="Search...">
+                            </div>
+                        </div>
+                    </div>
+                    <% groups.forEach((group)=> { %>
+                        <!-- <div class="user group-list" data-group="<%= group._id %>" data-name="<%= group.name %>"
+                                    data-image="<%= group.image %>">
+                                    <div class="avatar">
+                                        <img src="<%= group.image %>" alt="Group name">
+                                    </div>
+                                    <div class="name">
+                                        <%= group.name[0].toUpperCase() + group.name.slice(1) %>
+                                    </div>
+                                    <div class="mood">group mood</div>
+                                </div> -->
+                        <!------------------->
+                        <a href="#" class="conversation-list group-list list-group-item list-group-item-action border-0"
+                            data-group="<%= group._id %>" data-name="<%= group.name %>" data-image="<%= group.image %>">
+                            <div class="d-flex align-items-start">
+                                <img src="<%= group.image %>" class="avatar-thumbnail mr-1" width="45" height="45">
+                                <div class="flex-grow-1 ml-3">
+                                    <%= group.name[0].toUpperCase() + group.name.slice(1) %>
+                                </div>
+                            </div>
+                        </a>
+                        <% }) %>
+                </div>
+                <div class="col-12 col-lg-7 col-xl-9" id="chatBox">
+                    <div class="position-relative chatbox-welcome centered-image-container" style="height: 80vh;">
+                        <div class="container h-100">
+                            <div class="row h-100 align-items-center">
+                                <div class="col-md-6">
+                                    <div class="overlay-text">
+                                        <h2 class="mb-4">Welcome to Panda Chat</h2>
+                                        <p class="lead">Start connecting with friends and colleagues in real-time.</p>
+                                        <p>Click on a group from the list to begin a conversation.</p>
+                                        <p>Share photos and messages effortlessly!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-3 border-bottom" style="display: none;">
+                        <div class="d-flex align-items-center py-1 conversation-profile-title">
+                            <div class="position-relative">
+                                <img src="<%= user.avatar %>" class="avatar-thumbnail mr-1" id="groupImage" width="50" height="50">
+                            </div>
+                            <div class="flex-grow-1 pl-3" style="margin-left: 25px;">
+                                <strong id="groupName"></strong>
+                                <!-- <div class="text-muted small"><em id="userStatus">Offline</em></div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="position-relative chatbox-element centered-image-container" style="display: none;">
+                        <div class="chat-messages p-4" style="padding: 1rem !important">
+                            
+                        </div>
+                        <!-- Image Preview Container -->
+                        <div class="media-wrapper" id="mediaWrapper" style="display: none;">
+                            <button class="close-button">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <img id="imagePreview" src="" class="img-fluid">
+                        </div>
+                    </div>
+                    <!-- Send message -->
+                    <form id="sendGroupMessageForm" action="/send/group/message" style="display: none">
+                        <div class="flex-grow-0 py-3 px-4">
+                            <div class="hover-input-group col-11">
+                                <div class="input-group-prepend ">
+                                    <span class="input-group-emoji input-group-items">
+                                        <i class="fa fa-plus" id="mediaButton" aria-hidden="true"></i>
+                                        <i class="fa fa-smile-o" id="emojiButton" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                                <input type="file" name="shareImage" id="shareImage" style="display: none;">
+                                <emoji-picker id="emojiPicker" show-scroll="true"></emoji-picker>
+                            </div>
+                            <div class="input-group">
+                                <input type="text" class="form-control hover-form-control sendMessageField"
+                                    placeholder="Type your message" id="message" name="message" autocomplete="off">
+                                <button class="btn btn-primary sendMessageBtn">
+                                    <i class="fa fa-send" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- WhatsApp Web Attachment Pop-up -->
+                    <div id="mediaMenuPopup" class="file-upload-popup" style="display: none;">
+                        <div class="attachment-container">
+                            <div class="attachment-icons">
+                                <div class="icon-container imageContainer">
+                                    <i class="far fa-file-image fa-2x text-primary file-selector-menu"></i>
+                                    <h6>Photo</h6>
+                                </div>
+                                <div class="icon-container docContainer">
+                                    <i class="fas fa-file fa-2x text-danger file-selector-menu"></i>
+                                    <h6>Document</h6>
+                                </div>
+                                <input type="file" name="shareDocument" id="shareDocument" style="display: none;">
+                                <!-- Add more icons as needed -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script src="../assets/scripts/groups.js"></script>

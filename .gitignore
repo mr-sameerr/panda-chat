@@ -1,0 +1,10 @@
+# Dependency directory
+public/assets/vendor/
+node_modules/
+package-lock.json
+uploads/
+.env
+
+# Logs
+logs
+*.log

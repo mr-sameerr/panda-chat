@@ -1,0 +1,32 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script>
+  function logout() {
+    $.ajax({
+      url: "/logout",
+      type: "POST",
+      success: function (res) {
+        window.location.href = "/login"
+      }
+    })
+  }
+
+  const getCookie = name => {
+    const encodedCookie = document.cookie.split(`${name}=`)[1]
+    const decodedCookie = decodeURIComponent(encodedCookie)
+    const userObj = JSON.parse(decodedCookie)
+    return userObj
+  }
+  
+  const senderId = getCookie("user")._id
+  const socket = io('/users', { auth: { token: senderId } })
+
+  const scrollDownChat = () => {
+    $(".chat-messages").animate({
+      scrollTop: $(".chat-messages")[0].scrollHeight
+    }, 0);
+  };
+
+  let typing = false
+  let timeout = undefined
+  let user
+</script>

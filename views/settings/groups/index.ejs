@@ -1,0 +1,182 @@
+<div class="pagetitle">
+  <h1>Groups</h1>
+  <!-- <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+      <li class="breadcrumb-item">Settings</li>
+      <li class="breadcrumb-item active">Groups</li>
+    </ol>
+  </nav> -->
+</div><!-- End Page Title -->
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Groups <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+              data-bs-target="#createGroupModal">+</button></h5>
+          <p>Manage groups from here.</p>
+
+          <!-- Table with stripped rows -->
+          <table class="table datatable">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Image</th>
+                <th>Limit</th>
+                <th>Status</th>
+                <th data-type="date" data-format="YYYY/DD/MM">Start Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if(groups.length > 0) { %>
+              <% groups.forEach((group)=> { %>
+                <tr>
+                  <td>
+                    <%= group.name[0].toUpperCase() + group.name.slice(1) %>
+                  </td>
+                  <td><img src="<%= group.image  %>" width="100px" height="100px" style="border-radius: 100px;" /></td>
+                  <td class="text-center">
+                    <%= group.limit %>
+                  </td>
+                  <td class="text-center">
+                    <%= group.status ? "Active" : "Inactive" %>
+                  </td>
+                  <td><%= moment(group.createdAt).format("MMM Do, YYYY") %></td>
+                  <td>
+                    <button class="btn btn-sm btn-primary shareGroupLink" data-bs-toggle="modal"
+                      data-bs-target="#shareGroupModal" data-group="<%= group._id %>"
+                      title="Copy Group Link" group-name="<%= group.name %>">&#128279;</button>
+                    <!-- <button class="btn btn-sm btn-primary">&#128279;</button>
+                    <button class="btn btn-sm btn-primary">&#128279;</button> -->
+                  </td>
+                </tr>
+                <% }) %>
+                <% } %>
+                  <!-- <tr>
+                <td>Theodore Duran</td>
+                <td>8971</td>
+                <td>Dhanbad</td>
+                <td>1999/04/07</td>
+                <td>97%</td>
+              </tr> -->
+            </tbody>
+          </table>
+          <!-- End Table with stripped rows -->
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Create Group Modal -->
+<div class="modal fade" id="createGroupModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create Group</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="createGroupForm" enctype="multipart/form-data">
+          <!-- <input type="text" name="name" id="name"> -->
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="example-text-input" class="form-control-label" style="padding-bottom: 5px">Name</label>
+                <input class="form-control" type="text" value="" name="name" id="name" style="margin-bottom: 10px">
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="example-text-input" class="form-control-label" style="padding-bottom: 5px">Limit</label>
+                <input class="form-control" type="number" min="1" name="limit" min="1" id="limit"
+                  style="margin-bottom: 10px">
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="example-text-input" class="form-control-label" style="padding-bottom: 5px">Image</label>
+                <input class="form-control" type="file" name="image" id="image" style="margin-bottom: 10px">
+              </div>
+            </div>
+          </div>
+          <!-- <hr class="horizontal dark"> -->
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Create Group Modal-->
+
+<!-- Share Group Modal -->
+<div class="modal fade" id="shareGroupModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Share Group Link</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="groupLink" class="form-control-label" id="groupLabel" style="padding-bottom: 5px"></label>
+              <div class="input-group">
+                <input class="form-control" type="text" value="" name="name" id="groupLink" style="margin-bottom: 10px"
+                  disabled>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="text-center">
+          <button type="submit" class="btn btn-primary">Copy</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Create Group Modal-->
+
+<!-- Create Group Form -->
+<!-- 
+  <form id="createGroupMessageForm" enctype="multipart/form-data">
+    <div class="row">
+      <label for="inputText" class="col-sm col-form-label">Text </label>
+    </div>
+    <div class="row">
+      <div class="col-sm">
+        <input type="text" name="name" id="name" class="form-control">
+      </div>
+    </div>
+    <div class="row">
+      <label for="inputNumber" class="col-sm col-form-label">Number</label>
+      </div>
+      <div class="row">
+      <div class="col-sm">
+        <input type="number" name="limit" id="limit" class="form-control">
+      </div>
+    </div>
+    <div class="row">
+      <label for="inputNumber" class="col-sm-2 col-form-label">Image</label>
+    </div>
+    <div class="row">
+      <div class="col-sm">
+        <input class="form-control" name="image" id="image" type="file" id="formFile">
+      </div>
+    </div>
+    <div class="text-center" style="margin: 15px 0 -5px 0;">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form> -->
+<!-- End Multi Columns Form -->
+<script src="/assets/scripts/groups.js"></script>

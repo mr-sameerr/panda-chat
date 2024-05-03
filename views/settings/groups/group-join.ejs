@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Panda Chat | Join Group</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="/assets/img/favicon.png" rel="icon">
+  <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <!-- <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" >
+  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="../assets/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="index.html" class="logo d-flex align-items-center">
+        <img src="/assets/img/logo.png" alt="">
+        <span class="d-none d-lg-block">NiceAdmin</span>
+      </a>
+    </div><!-- End Logo -->
+  </header><!-- End Header -->
+
+  <main id="main" class="main" style="margin-left: 0;">
+
+    <section class="section profile">
+      <div class="row">
+        <div class="col-xl-12">
+
+          <div class="card">
+            <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+              <div class="card mb-3">
+                <img class="card-img-top" src="../<%= group.image %>" alt="Card image cap" height="180px" style="max-width: 100%">
+                <div class="card-body">
+                  <h2 class="card-title"><%= group.name[0].toUpperCase() + group.name.slice(1) %></h2>
+                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                  <p class="card-text "><span class="card-title">Total Members</span> : <%= memberCount %> </p>
+                  <p class="card-text "><span class="card-title">Available For</span> : <%= remaningCount %> </p>
+                  <!-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> -->
+                  <% if(user._id  == group.creater_id){ %>
+                    <p>You are the owner, so you cant join this group.</p>
+                  <% }else if(isJoined){ %>
+                    <p>You are member of this group.</p>
+                  <% }else{ %>
+                    <button class="btn btn-primary" id="joinGroupBtn" data-group="<%= group._id %>">Join</button>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main><!-- End #main -->
+  <!-- Template Main JS File -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script >
+    $(document).ready( function()  {
+        $("#joinGroupBtn").click( function() {
+            let groupId = $(this).attr("data-group")
+            $(this).attr("disabled", "disabled")
+            $.ajax({
+              url: "/join-group",
+              type: "POST",
+              data: { groupId },
+              success: function(res) {
+                if(res.success == true){
+                    location.reload()
+                }else if(res.success == "unauthorized"){
+                  alert(res.message)
+                }else{
+                    alert(res.message)
+                    $(this).text("Join")
+                    $(this).removeAttr("disabled")
+                }
+              }
+            })
+        })
+    })
+  </script>
+
+
+</body>
+
+</html>

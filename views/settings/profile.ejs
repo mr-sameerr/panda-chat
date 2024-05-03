@@ -1,0 +1,286 @@
+<style>
+    .flash-message {
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+    }
+
+    .flash-message.success {
+        color: #4caf50;
+        background-color: #dff2bf;
+    }
+    /* Add styles for other types of messages (e.g., error, info) as needed. */
+</style>
+<div class="pagetitle">
+    <h1>Profile</h1>
+</div><!-- End Page Title -->
+<section class="section profile">
+    <div class="row">
+        <div class="col-xl-4">
+            <div class="card">
+                <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+                    <!-- <img src="/user/avatar/<%= user.avatar %>" alt="Profile" id="aboutAvatar" class="rounded-circle"> -->
+                    <img src="<%= user.avatar %>" alt="Profile" id="aboutAvatar" class="rounded-circle">
+                    <h2>
+                        <%= user.first_name[0].toUpperCase() + user.first_name.slice(1) %>
+                    </h2>
+                    <h3><%= user.profile %></h3>
+                    <div class="social-links mt-2">
+                        <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8">
+            <div class="card">
+                <div class="card-body pt-3">
+                    <!-- Bordered Tabs -->
+                    <ul class="nav nav-tabs nav-tabs-bordered">
+                        <li class="nav-item">
+                            <button class="nav-link active" data-bs-toggle="tab"
+                                data-bs-target="#profile-overview">Overview</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit
+                                Profile</button>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab"
+                                data-bs-target="#profile-settings">Settings</button>
+                        </li> -->
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab"
+                                data-bs-target="#profile-change-password">Change Password</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content pt-2">
+                        <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                            <h5 class="card-title">About</h5>
+                            <p class="small fst-italic">Sunt est soluta temporibus accusantium neque nam maiores cumque
+                                temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae
+                                quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</p>
+                            <h5 class="card-title">Profile Details</h5>
+                            <%
+                                var firstname = user.first_name[0].toUpperCase() + user.first_name.slice(1)
+                                var lastname = user.last_name[0].toUpperCase() + user.last_name.slice(1)
+                                var fullname = `${firstname} ${lastname}`
+                                %>
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-4 label ">Full Name</div>
+                                    <div class="col-lg-9 col-md-8"><%= fullname %></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-4 label">Email</div>
+                                    <div class="col-lg-9 col-md-8"><%= user.email %></div>
+                                </div>
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">Company</div>
+                                <div class="col-lg-9 col-md-8"><%= user.company %></div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">Job</div>
+                                <div class="col-lg-9 col-md-8"><%= user.job %></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">Country</div>
+                                <div class="col-lg-9 col-md-8"><%= user.country %></div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+                            <!-- Profile Edit Form -->
+                            <form id="updateUserProfile" novalidate>
+                                <div class="row mb-3">
+                                    <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile
+                                        Image</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <!-- <img src="/images/<%= user.avatar %>" id="userAvatar" alt="Profile"> -->
+                                        <img id="userAvatar"
+                                            src="<%= user.avatar %>" />
+                                            <input type="hidden" name="avatar_extension" id="avatar_extension" value="">
+                                            <input type="hidden" name="avatar_name" id="avatar_name" value="">
+                                        <div class="pt-2">
+                                            <input type="hidden" name="avatar" id="avatar" />
+                                            <i class="bi bi-upload" id="uploadAvatarBtn" style="cursor: pointer;"
+                                                data-bs-toggle="modal" data-bs-target="#imageCropperModal">Upload</i>
+                                            <div class="invalid-feedback first_name">
+                                            </div>
+                                            <!-- <button class="btn btn-primary btn-large"
+                                            id="uploadAvatarBtn" style="cursor: pointer;" data-bs-toggle="modal" 
+                                            data-bs-target="#imageCropperModal">Browse Image <i class="bi bi-upload"></i></button> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="first_name" class="col-md-4 col-lg-3 col-form-label">First Name</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input name="first_name" type="text" class="form-control" id="first_name"
+                                            value="<%= user.first_name %>" aria-describedby="first_name">
+                                        <div class="error-first_name validation-error">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="last_name" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input name="last_name" type="text" class="form-control" id="last_name"
+                                            value="<%= user.last_name %>">
+                                        <div class="error-last_name validation-error">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="job" class="col-md-4 col-lg-3 col-form-label">Job</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input name="job" type="text" class="form-control" id="job"
+                                            value="<%= user.job %>">
+                                        <div class="error-job validation-error">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input type="email" class="form-control" value="<%= user.email %>" disabled>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="company" class="col-md-4 col-lg-3 col-form-label">Company</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input name="company" type="text" class="form-control" id="company"
+                                            value="<%= user.company %>">
+                                        <div class="error-company validation-error">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="country" class="col-md-4 col-lg-3 col-form-label">Country</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input name="country" type="text" class="form-control" id="country"
+                                            value="<%= user.country %>">
+                                        <div class="error-country validation-error">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <input type="submit" class="btn btn-primary" value="Update">
+                                </div>
+                            </form>
+                            <!-- End Profile Edit Form -->
+                        </div>
+                        <!-- <div class="tab-pane fade pt-3" id="profile-settings"> -->
+                        <!-- Settings Form -->
+                        <!-- <form>
+                                <div class="row mb-3">
+                                    <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Email
+                                        Notifications</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="changesMade" checked>
+                                            <label class="form-check-label" for="changesMade">
+                                                Changes made to your account
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="newProducts" checked>
+                                            <label class="form-check-label" for="newProducts">
+                                                Information on new products and services
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="proOffers">
+                                            <label class="form-check-label" for="proOffers">
+                                                Marketing and promo offers
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="securityNotify" checked
+                                                disabled>
+                                            <label class="form-check-label" for="securityNotify">
+                                                Security alerts
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                </div>
+                            </form> -->
+                        <!-- End settings Form -->
+                        <!-- </div> -->
+                        <div class="tab-pane fade pt-3" id="profile-change-password">
+                            <!-- Change Password Form -->
+                            <form>
+                                <div class="row mb-3">
+                                    <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current
+                                        Password</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input name="password" type="password" class="form-control"
+                                            id="currentPassword">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">New
+                                        Password</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input name="newpassword" type="password" class="form-control" id="newPassword">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Re-enter New
+                                        Password</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input name="renewpassword" type="password" class="form-control"
+                                            id="renewPassword">
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary">Change Password</button>
+                                </div>
+                            </form><!-- End Change Password Form -->
+                        </div>
+                    </div><!-- End Bordered Tabs -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Image Cropper Modal -->
+<div class="modal fade" id="imageCropperModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Crop Your Avatar</h5>
+                <button type="button" id="closeBtn" class="btn-close" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="cropAvatarForm" enctype="multipart/form-data">
+                    <!-- <input type="text" name="name" id="name"> -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <!-- <label for="example-text-input" class="form-control-label"
+                                    style="padding-bottom: 5px">Crop Image</label> -->
+                                <img src="" id="cropAvatar" style="display: block; max-width: 100%;">
+                                <input class="form-control" type="file" name="image" id="uploadAvatar"
+                                    style="margin-bottom: 10px;">
+                                <div class="error-crop-avatar validation-error">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <hr class="horizontal dark"> -->
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Image Cropper Modal-->
+<script src="/assets/scripts/users.js"></script>
