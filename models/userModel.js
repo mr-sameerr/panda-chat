@@ -36,8 +36,8 @@ const userSchema = mongoose.Schema({
         required: true
     },
     verifiedAt: {
-        type: Boolean,
-        default: false
+        type: String,
+        default: null
     },
     isOnline: {
         type: Boolean,
