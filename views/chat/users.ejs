@@ -1,44 +1,54 @@
 <main class="content">
     <div class="container p-0">
         <h1 class="h3 mb-3">Messages</h1>
+        <div>
+            <a href="/pay">Pay Now</a>
+        </div>
         <div class="card">
             <div class="row g-0">
                 <div class="col-12 col-md-5 col-xl-3 border-right">
                     <div class="px-3 d-none d-md-block search-box">
                         <div class="d-flex align-items-center">
-                            <div class="flex-grow-1">
-                                <input type="text" id="searchUser" class="form-control my-3" placeholder="Search...">
+                            <div class="flex-grow-1 col-10">
+                                <input type="text" id="searchUser" class="form-control my-3" placeholder="Search user">
+                            </div>
+                            <div class="col-2" style="text-align: center; font-size: 20px;">
+                                <button class="btn " id="getAllUsers" data-bs-target="#allUsers" data-bs-toggle="modal">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
                     <div class="users-list">
-                    <% if(users) { %>
+                        <% if(users) { %>
                             <% users.forEach((user)=> { %>
-                                <%
-                                    var firstname = user.userInfo.first_name[0].toUpperCase() + user.userInfo.first_name.slice(1)
-                                    var lastname = user.userInfo.last_name[0].toUpperCase() + user.userInfo.last_name.slice(1)
-                                    var fullname = `${firstname} ${lastname}`
+                                <% var firstname=user.userInfo.first_name[0].toUpperCase() +
+                                        user.userInfo.first_name.slice(1) 
+                                    var lastname=user.userInfo.last_name[0].toUpperCase() + 
+                                        user.userInfo.last_name.slice(1)
+                                    var fullname= `${firstname}  ${lastname}`
                                 %>
-                                <a href="#" class="conversation-list list-group-item list-group-item-action border-0
-                            user-list" data-user="<%= user._id %>" data-name="<%= fullname %>">
-                                    <div class="d-flex align-items-start">
-                                        <img src="<%= user.userInfo.avatar %>" class="avatar-thumbnail mr-1" width="45" height="45">
-                                        <div class="flex-grow-1 ml-3">
-                                            <%= fullname %>
-                                                <!-- <div class="badge bg-success notification-badge float-right">5</div> -->
-                                                <div class="small">
-                                                    <span id="<%= user._id %>-status"
-                                                        class="fas fa-circle chat-online <%= user.isOnline ? 'chat-online' : 'chat-offline' %>">
-                                                    </span>
-                                                    <span id="<%= user._id %>-status-text">
-                                                        <%= user.isOnline ? 'Online' : 'Offline' %>
-                                                    </span>
-                                                </div>
+                                    <a href="#" class="conversation-list list-group-item list-group-item-action border-0
+                            user-list" data-user="<%= user._id %>" data-name="<%= fullname %>" data-avatar="<%= user.userInfo.avatar %>">
+                                        <div class="d-flex align-items-start">
+                                            <img src="<%= user.userInfo.avatar %>" class="avatar-thumbnail mr-1"
+                                                width="45" height="45">
+                                            <div class="flex-grow-1 ml-3">
+                                                <%= fullname %>
+                                                    <!-- <div class="badge bg-success notification-badge float-right">5</div> -->
+                                                    <div class="small">
+                                                        <span id="<%= user._id %>-status"
+                                                            class="fas fa-circle chat-online <%= user.isOnline ? 'chat-online' : 'chat-offline' %>">
+                                                        </span>
+                                                        <span id="<%= user._id %>-status-text">
+                                                            <%= user.isOnline ? 'Online' : 'Offline' %>
+                                                        </span>
+                                                    </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </a>
-                                <% } ) } %>
-                                    <hr class="d-block d-md-none mt-1 mb-0">
+                                    </a>
+                                    <% } ) } %>
+                                        <hr class="d-block d-md-none mt-1 mb-0">
                     </div>
                 </div>
                 <div class="col-12 col-lg-7 col-xl-9" id="chatBox">
@@ -59,7 +69,7 @@
                     <div class="px-3 border-bottom" style="display: none;">
                         <div class="d-flex align-items-center py-1 conversation-profile-title">
                             <div class="position-relative">
-                                <img src="<%= user.avatar %>" class="avatar-thumbnail mr-1" alt="Sharon Lessman"
+                                <img src="" class="avatar-thumbnail profile-avatar mr-1" alt=""
                                     width="50" height="50">
                             </div>
                             <div class="flex-grow-1 pl-3" style="margin-left: 25px;">
@@ -123,4 +133,40 @@
         </div>
     </div>
 </main>
+
+<!-- All Users List Modal -->
+<div class="modal fade" id="allUsers" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-top ">
+        <div class="modal-content" style="max-height: 80vh;">
+            <div class="modal-header" style="border-bottom: 0; padding-bottom: 0px;">
+                <h5 class="modal-title">Users</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="row g-0">
+                        <div class="col-12 col-md-12 col-xl-8" style="width: 100%;">
+                            <!-- Search users -->
+                            <div class="px-3 d-none d-md-block search-box">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-grow-1 col-10">
+                                        <input type="text" id="searchUserModal" class="form-control my-3"
+                                            placeholder="Search user">
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="users-list-modal px-3 border-right" style="max-height: calc(80vh - 175px);">
+                            <!-- Users list will be here -->
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- <div class="text-center">
+          <button type="submit" class="btn btn-primary">Copy</button>
+        </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Create Group Modal-->
 <script src="../assets/scripts/users.js"></script>

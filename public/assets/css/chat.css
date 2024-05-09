@@ -15,19 +15,21 @@ body {
 }
 
 .border-right {
-    overflow-y: auto; /* Enable vertical scrolling */
-    overflow-x: hidden; /*Disable horizontal scrolling*/
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    overflow-x: hidden;
+    /*Disable horizontal scrolling*/
     max-height: calc(100vh - 170px);
-    padding-right: 15px;
+    /* padding-right: 15px; */
     padding-bottom: 15px;
-    
+
 }
 
 .search-box {
     position: sticky;
     top: 0;
-    z-index: 1000; 
-    background-color: #fff; 
+    z-index: 1000;
+    background-color: #fff;
     overflow-x: hidden
 }
 
@@ -480,7 +482,8 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #515050; /* Text color */
+    color: #515050;
+    /* Text color */
     z-index: 1;
 }
 
@@ -491,26 +494,30 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, rgba(204, 199, 199, 0.5), rgba(102, 160, 251, 0.7)); /* Adjust the gradient colors and opacity */
+    background: linear-gradient(to bottom, rgba(204, 199, 199, 0.5), rgba(102, 160, 251, 0.7));
+    /* Adjust the gradient colors and opacity */
     z-index: 0;
 }
 
 .position-relative {
-    position: relative; /* Ensure the parent container is relative for absolute positioning */
+    position: relative;
+    /* Ensure the parent container is relative for absolute positioning */
 }
 
 
 /* Responsive adjustments */
 @media screen and (max-width: 767px) {
     .chat-messages {
-        max-height: calc(100vh - 200px); /* Adjust as needed */
+        max-height: calc(100vh - 200px);
+        /* Adjust as needed */
     }
 }
 
 /* Ensure proper alignment of message data */
 .message-data {
     text-align: right;
-    margin-top: 5px; /* Adjust as needed */
+    margin-top: 5px;
+    /* Adjust as needed */
 }
 
 .message-data-name {
@@ -528,4 +535,14 @@ body {
     vertical-align: middle;
 }
 
+@media (min-width: 1200px) {
+    .col-xl-9 {
+        width: 72% !important;
+    }
+}
 
+@media (min-width: 1200px) {
+    .col-xl-3 {
+        width: 28% !important;
+    }
+}

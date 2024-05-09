@@ -1,9 +1,6 @@
 require('dotenv').config()
 const promise = require('bluebird')
-const userUtils = require('../utils/userUtils')
 const userService = require('../services/userService')
-
-const UserChat = require('../models/userChatModel')
 
 class userController {
 
@@ -23,18 +20,17 @@ class userController {
                     })
                 }
             })
-        // let chats = await userChat.find({}).select('_id sender_id message createdAt updatedAt')
     }
 
-    async reorderUsers(req, res){
+    async reorderUsers(req, res) {
         let currentUser = req.user
         return promise.resolve(userService.usersLastMsgs(currentUser))
-            .then( data => {
-                if(data) {
+            .then(data => {
+                if (data) {
                     let users = data
                     // console.log(users)
                     res.send({ success: true, users })
-                }else{
+                } else {
                     let users = data
                     res.send({ success: false, users })
                 }
@@ -69,9 +65,9 @@ class userController {
         //     },
         //     { $sort: { lastMsgTimestamp: -1 } },
         //     { $limit: 10 },
-            // { $lookup:
-            //     { from: "users", localField: "message.sender_id", foreignField: "_id", as: "userInfo" }
-            // },
+        // { $lookup:
+        //     { from: "users", localField: "message.sender_id", foreignField: "_id", as: "userInfo" }
+        // },
         //     {
         //         $lookup: {
         //             from: "users",
@@ -85,8 +81,6 @@ class userController {
         //     }
         // ])
 
-        // console.log(userData[0].userInfo, 123123)
-        // return promise.resolve(userUtils.capitalizeOtherUsernames(currentUser))
         return promise.resolve(userService.usersLastMsgs(currentUser))
             .then(data => {
                 if (data) {
@@ -167,6 +161,20 @@ class userController {
                     res.send({ success: true, data })
                 } else {
                     res.send({ success: false, data })
+                }
+            })
+    }
+
+    async users(req, res) {
+        const currentUser = req.user
+        return promise.resolve(userService.findOtherUsersService(currentUser))
+            .then(data => {
+                if(data) {
+                    let users = data
+                    res.send({ success: true, users })
+                }else{
+                    let users = data
+                    res.send({ success: false, users })
                 }
             })
     }

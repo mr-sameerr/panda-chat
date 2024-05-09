@@ -4,7 +4,7 @@ const awsS3Upload = require('../config/awsConfig')
 
 class userService {
     async findOtherUsersService(user) {
-        let users = await User.find({ _id: { $ne: user._id } })
+        let users = await User.find({ _id: { $ne: user._id } }).sort({first_name: 1})
         if (users.length > 0) {
             return users
         } else {
