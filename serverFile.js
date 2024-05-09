@@ -23,6 +23,7 @@ const passportInitialize = require('./config/passport')
 const AuthMiddleware = require('./middlewares/Auth')
 const socketServices = require('./services/socketServices')
 
+
 const moment = require('moment')
 const upload = multer()
 app.use(upload.none());
@@ -60,8 +61,7 @@ app.set("view engine", "ejs")
 const emojiPicker = "node_modules/emoji-picker-element"
 const cropperJS = "node_modules/cropperjs"
 
-
-app.use('/cropperjs', express.static(cropperJS)) //cropper Js 
+app.use('/cropperjs', express.static(cropperJS)) //cropper Js
 app.use('/emoji-picker', express.static(emojiPicker)) //Emoji picker element
 app.use(express.static(publicDirectory))    //Public directory for files
 app.use(express.static(uploadDirectory))    //Upload directory for user uploads

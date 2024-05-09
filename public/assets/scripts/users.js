@@ -116,7 +116,7 @@ $(document).ready(function () {
     $('#emojiPicker').on('emoji-click', function (event) {
         // Get the selected emoji
         var emoji = event.detail.unicode;
-        $("#emojiPicker").hide()
+        // $("#emojiPicker").hide()
         $('.sendMessageField').val($('.sendMessageField').val() + emoji)
         let inputMsg = $(".sendMessageField").val()
         checkInputField(inputMsg)
@@ -134,10 +134,23 @@ $(document).ready(function () {
     //Convert image to Base64 Encoded string, after selecting photo to share.
     let sharedBase64Image
     let imageObj
-    $("#shareImage").on("change", function () {
+    $("#shareImage").on("change", function (eventImg) {
         let reader
         imageObj = this.files[0]
+        maxSize = 1024 * 1024
         if (imageObj) {
+            if (!imageObj.type.startsWith("image")) {
+                alert("Please upload valid image.")
+                imageObj = undefined
+                return
+            }
+
+            if (maxSize < imageObj.size) {
+                alert("Please upload smaller image.")
+                imageObj = undefined
+                return
+            }
+
             reader = new FileReader()
             reader.onload = event => {
                 sharedBase64Image = event.target.result
@@ -145,6 +158,7 @@ $(document).ready(function () {
                 $('#imagePreview').attr('src', sharedBase64Image);
             }
         }
+
         reader.readAsDataURL(imageObj)
         $(".chat-messages").show("style", "display: flex !important;")
         $(".media-wrapper").attr("style", "display: flex !important;")
@@ -387,6 +401,7 @@ $(document).ready(function () {
         // You can handle the selected file here (e.g., preview, upload, etc.)
         const selectedFile = $(this).prop('files')[0];
         // console.log(selectedFile);
+        console.log(selectedFile)
     });
 
     // Toggle the display property of the Media Menu Pop-up
@@ -418,17 +433,31 @@ $(document).ready(function () {
         }
     })
 
-    $("#searchUser").on("input", function (event) {
-        event.preventDefault()
-        $(".users-list").empty()
+    //Trigger event when search user through modal
+    $("#searchUserModal").on("input", function (event) {
+
         let query = $(this).val().replace(/[&\/\\#,+()$~%.'":*^@?<>{}%]/g, '').trim()
-        // if (query.length > 0) {
+        searchUserAndUpdate(query, ".users-list-modal")
+    })
+
+    //Trigger event when search user through list
+    $("#searchUser").on("input", function (event) {
+
+        let query = $(this).val().replace(/[&\/\\#,+()$~%.'":*^@?<>{}%]/g, '').trim()
+        searchUserAndUpdate(query, ".users-list")
+    })
+
+    //Search user with name and update html
+    function searchUserAndUpdate(query, elementSelector) {
+        $(elementSelector).empty()
         $.ajax({
             url: "/search-users",
             type: "POST",
             data: { query },
             success: function (res) {
                 let users = res.data
+                let $container = $(elementSelector); // Select the container
+                let $newContent = $("<div></div>");
                 users.forEach(user => {
                     let name = `${user.first_name} ${user.last_name}`
                     let username = capitalizeString(name)
@@ -450,11 +479,52 @@ $(document).ready(function () {
                                     </div>
                                 </div>
                             </a>`
-                    $(".users-list").append(html)
+                    $newContent.append(html);
                 })
+
+                $container.fadeOut(200, function () {
+                    $container.empty().append($newContent.html()).fadeIn(200);
+                });
             }
         })
-        // }
+    }
+
+    //Show all existing users on modal
+    $("#getAllUsers").on("click", function (event) {
+        event.preventDefault()
+        $(".users-list-modal").empty()
+        $.ajax({
+            url: "/users",
+            type: "POST",
+            success: function (res) {
+                let users = res.users
+                if (users.length > 0) {
+                    users.forEach(user => {
+                        let fullname = capitalizeString(user.first_name + " " + user.last_name)
+                        let html = `<a href="#" class="conversation-list list-group-item list-group-item-action border-0
+                        user-list" data-user="${user._id}" data-name="${fullname}">
+                            <div class="d-flex align-items-start">
+                                <img src="${user.avatar}" class="avatar-thumbnail mr-1" width="45"
+                                    height="45">
+                                <div class="flex-grow-1 ml-3">
+                                    ${fullname}
+                                        <div class="small">
+                                            <span id="${user._id}-status"
+                                                class="fas fa-circle ${user.isOnline ? "chat-online" : "chat-offline"}">
+                                            </span>
+                                            <span id="${user._id}-status-text">
+                                                ${user.isOnline ? "Online" : "Offline"}
+                                            </span>
+                                        </div>
+                                </div>
+                            </div>
+                        </a>`
+
+                        $(".users-list-modal").append(html)
+                    })
+                }
+            }
+        })
     })
 
     //Capitalize initials of string
@@ -473,7 +543,7 @@ $(document).ready(function () {
                 $(".users-list").empty()
                 let users = res.users
                 users.forEach(user => {
-                    let fullname = capitalizeString(user.userInfo.first_name +' '+ user.userInfo.last_name)
+                    let fullname = capitalizeString(user.userInfo.first_name + ' ' + user.userInfo.last_name)
                     let html = `
                             <a href="#" class="conversation-list list-group-item list-group-item-action border-0
                                 user-list" 
@@ -485,10 +555,10 @@ $(document).ready(function () {
                                     ${fullname}
                                         <div class="small">
                                             <span id="${user.userInfo._id}-status"
-                                                class="fas fa-circle ${ user.userInfo.isOnline ? 'chat-online' : 'chat-offline'} ">
+                                                class="fas fa-circle ${user.userInfo.isOnline ? 'chat-online' : 'chat-offline'} ">
                                             </span>
                                             <span id="${user.userInfo._id}-status-text">
-                                                ${ user.userInfo.isOnline ? 'Online' : 'Offline' }
+                                                ${user.userInfo.isOnline ? 'Online' : 'Offline'}
                                             </span>
                                         </div>
                                 </div>
@@ -505,14 +575,17 @@ $(document).ready(function () {
 $(document).on("click", ".user-list", function () {
     let receiver_id = $(this).attr("data-user")
     let username = $(this).attr("data-name")
+    let avatar = $(this).attr("data-avatar")
 
     // $(".chatbox-element").css("visibility", "visible")
     $("#chatBox").children().show()
     $("#mediaMenuPopup").hide()
     $(".chatbox-welcome").hide()
+    $("#allUsers").modal("hide")
 
     $("#message").attr("receiver-id", receiver_id)
     $("#usernameChat").text(username)
+    $(".profile-avatar").attr("src", avatar)
     $("#userStatus").addClass(`${receiver_id}-user-status`)
 
     //Through an event to load conversation
@@ -527,7 +600,8 @@ $(document).on("click", function (event) {
 
     if (!$(event.target).closest("#emojiPicker").length &&
         !$(event.target).closest("[data-ref='rootElement']").length &&
-        !$(event.target).closest("#message").length) {
+        !$(event.target).closest("#message").length ||
+        $(event.target).is("#message")) {
         $("#emojiPicker").hide()
     }
 })

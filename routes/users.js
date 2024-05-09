@@ -12,4 +12,6 @@ router.get('/profile', authMiddleware.isLoggedIn, userController.renderProfile)
 router.post('/profile', validationRules(), validate, uploadFile.single("avatar"), userController.profile)
 router.post('/search-users', userController.searchUsers)
 router.post('/reorder/user-list', userController.reorderUsers)
+router.post('/users', userController.users)
+
 module.exports = router
