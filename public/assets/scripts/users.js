@@ -456,24 +456,26 @@ $(document).ready(function () {
             data: { query },
             success: function (res) {
                 let users = res.data
+                // let flag = res.flag
                 let $container = $(elementSelector); // Select the container
                 let $newContent = $("<div></div>");
                 users.forEach(user => {
-                    let name = `${user.first_name} ${user.last_name}`
+                    // let userInf = (flag == "search") ? user : user.userInfo
+                    let name = `${user.userInfo.first_name} ${user.userInfo.last_name}`
                     let username = capitalizeString(name)
                     let html = `
                             <a href="#" class="conversation-list list-group-item list-group-item-action border-0
-                            user-list" data-user="${user._id}" data-name="${username}">
+                            user-list" data-user="${user.userInfo._id}" data-name="${username}">
                                 <div class="d-flex align-items-start">
-                                    <img src="${user.avatar}" class="avatar-thumbnail mr-1" width="45" height="45">
+                                    <img src="${user.userInfo.avatar}" class="avatar-thumbnail mr-1" width="45" height="45">
                                     <div class="flex-grow-1 ml-3">
                                         ${username}
                                         <div class="small">
-                                            <span id="${user._id}-status"
-                                                class="fas fa-circle chat-online ${user.isOnline ? 'chat-online' : 'chat-offline'}">
+                                            <span id="${user.userInfo._id}-status"
+                                                class="fas fa-circle chat-online ${user.userInfo.isOnline ? 'chat-online' : 'chat-offline'}">
                                             </span>
-                                            <span id="${user._id}-status-text">
-                                                ${user.isOnline ? 'Online' : 'Offline'}
+                                            <span id="${user.userInfo._id}-status-text">
+                                                ${user.userInfo.isOnline ? 'Online' : 'Offline'}
                                             </span>
                                         </div>
                                     </div>

@@ -318,6 +318,35 @@ $(document).ready(function () {
         })
     })
 
+    //Get all groups joined by loggedIn user on modal
+    $("#getAllGroups").on("click", function(event) {
+        event.preventDefault()
+        $.ajax({
+            url: "/groups",
+            type: "GET",
+            success: function(res) {
+                let groups = res.groups
+                groups.forEach(group => {
+                    let fullname = capitalizeString(group.name)
+                    console.log(group)
+                    let html = `<a href="#" class="conversation-list list-group-item list-group-item-action border-0
+                    group-list" data-group="${group._id}" data-name="${fullname}">
+                        <div class="d-flex align-items-start">
+                            <img src="${group.image}" class="avatar-thumbnail mr-1" width="45"
+                                height="45">
+                            <div class="flex-grow-1 ml-3">
+                                ${fullname}
+                            </div>
+                        </div>
+                    </a>`
+                    $(".groups-list-modal").append(html)
+                })
+            }
+        })
+    })
+
+    // $("#searchGroupModal")
+
     function capitalizeString(string) {
         return string.split(" ").map(str => {
             return str.charAt(0).toUpperCase() + str.slice(1)
