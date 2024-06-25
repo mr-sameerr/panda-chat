@@ -456,11 +456,9 @@ $(document).ready(function () {
             data: { query },
             success: function (res) {
                 let users = res.data
-                // let flag = res.flag
                 let $container = $(elementSelector); // Select the container
                 let $newContent = $("<div></div>");
                 users.forEach(user => {
-                    // let userInf = (flag == "search") ? user : user.userInfo
                     let name = `${user.userInfo.first_name} ${user.userInfo.last_name}`
                     let username = capitalizeString(name)
                     let html = `

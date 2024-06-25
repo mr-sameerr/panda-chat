@@ -161,7 +161,7 @@ class userController {
             .then(data => {
                 // console.log(data, 333)
                 if (data.length > 0) {
-                    res.send({ success: true, data, flag: data.flag })
+                    res.send({ success: true, data})
                 } else {
                     res.send({ success: false, data })
                 }
