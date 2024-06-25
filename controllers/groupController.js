@@ -117,6 +117,17 @@ class groupController {
                 })
         }
     }
+
+    //Show all joined group by loggedIn user.
+    async groups(req, res) {
+        const currentUser = req.user
+        return promise.resolve(groupService.getUserGroupsService(currentUser))
+            .then( groups => {
+                res.status(200).send(
+                    { success: true, groups }
+                )
+            })
+    }
 }
 
 module.exports = new groupController

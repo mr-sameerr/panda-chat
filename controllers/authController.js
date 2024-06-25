@@ -12,6 +12,7 @@ const accountVerification = require('../models/accountVerificationModel')
 class authController {
 
     async index(req, res) {
+        
         res.render('home', {
             layout: false
         })

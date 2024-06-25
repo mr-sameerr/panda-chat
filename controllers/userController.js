@@ -1,6 +1,8 @@
 require('dotenv').config()
 const promise = require('bluebird')
 const userService = require('../services/userService')
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+
 
 class userController {
 
@@ -157,8 +159,9 @@ class userController {
         const currentUser = req.user
         return promise.resolve(userService.searchUsersService(query, currentUser))
             .then(data => {
+                // console.log(data, 333)
                 if (data.length > 0) {
-                    res.send({ success: true, data })
+                    res.send({ success: true, data})
                 } else {
                     res.send({ success: false, data })
                 }
@@ -169,14 +172,45 @@ class userController {
         const currentUser = req.user
         return promise.resolve(userService.findOtherUsersService(currentUser))
             .then(data => {
-                if(data) {
+                if (data) {
                     let users = data
                     res.send({ success: true, users })
-                }else{
+                } else {
                     let users = data
                     res.send({ success: false, users })
                 }
             })
+    }
+
+    async paymentRender(req, res) {
+        let stripePub = process.env.STRIPE_PUBLISHABLE_KEY
+        res.render('dashboard/payment', { layout: false, stripePub })
+    }
+
+    async payment(req, res) {
+        const { amount, token } = req.body;
+        console.log(req.body, 7777)
+        try {
+            const charge = await stripe.charges.create({
+              amount,
+              currency: 'usd',
+              source: token.id,
+              description: 'Charge for test@example.com',
+            });
+            // console.log(charge, 1111)
+            res.send('Payment successful');
+          } catch (err) {
+            // console.error('Error processing payment:', err);
+            // console.log(err, err.message, 2222)
+
+            let message = 'An error occurred while processing your payment.';
+
+            if (err.type === 'StripeCardError') {
+              message = err.message;
+            }
+        
+            res.status(500).send(message);
+          }
     }
 }
 

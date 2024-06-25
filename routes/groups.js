@@ -15,6 +15,8 @@ router.post('/group/store',
     groupController.groupStore
 )
 
+router.get('/groups', groupController.groups)
+
 router.get('/join-group/:groupId', isLoggedIn, groupController.shareGroup)
 router.post('/join-group', groupController.joinGroup)
 

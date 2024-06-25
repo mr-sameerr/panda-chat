@@ -4,7 +4,7 @@ const awsS3Upload = require('../config/awsConfig')
 
 class userService {
     async findOtherUsersService(user) {
-        let users = await User.find({ _id: { $ne: user._id } }).sort({first_name: 1})
+        let users = await User.find({ _id: { $ne: user._id } }).sort({ first_name: 1 })
         if (users.length > 0) {
             return users
         } else {
@@ -45,7 +45,7 @@ class userService {
                     from: "users",
                     let: { userId: "$_id" },
                     pipeline: [
-                        { $match: { $expr: { $eq: [ "$_id", "$$userId" ] } } },
+                        { $match: { $expr: { $eq: ["$_id", "$$userId"] } } },
                         { $project: { first_name: 1, last_name: 1, avatar: 1, isOnline: 1 } }
                     ],
                     as: "userInfo"
@@ -53,7 +53,6 @@ class userService {
             },
             { $unwind: "$userInfo" }
         ])
-
         return userData
     }
 
@@ -95,31 +94,71 @@ class userService {
 
     async searchUsersService(query, currentUser) {
         if (query != "") {
-            const users = await User.find({
-                $and: [
-                    { _id: { $ne: currentUser._id } },
-                    {
+            const users = await UserChat.aggregate([
+                {
+                    $match: {
                         $or: [
-                            { first_name: { $regex: query, $options: "i" } },
-                            { last_name: { $regex: query, $options: "i" } },
-                            {
-                                $expr: {
-                                    $regexMatch: {
-                                        input: { $concat: ["$first_name", " ", "$last_name"] },
-                                        regex: query,
-                                        options: "i"
-                                    }
-                                }
-                            }
+                            { sender_id: currentUser._id },
+                            { receiver_id: currentUser._id }
                         ]
                     }
-                ]
-            }, { first_name: 1, last_name: 1, avatar: 1 })
+                },
+                {
+                    $group: {
+                        _id: {
+                            $cond: [
+                                { $eq: ["$receiver_id", currentUser._id] },
+                                "$sender_id",
+                                "$receiver_id"
+                            ]
+                        },
+                        lastMsgTimestamp: { $max: "$createdAt" },
+                        message: { $last: "$$ROOT" }
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "users",
+                        let: { userId: "$_id" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: { $eq: ["$_id", "$$userId"] }
+                                }
+                            },
+                            {
+                                $match: {
+                                    $or: [
+                                        { first_name: { $regex: query, $options: "i" } },
+                                        { last_name: { $regex: query, $options: "i" } },
+                                        {
+                                            $expr: {
+                                                $regexMatch: {
+                                                    input: { $concat: ["$first_name", ' ', "$last_name"] },
+                                                    regex: query,
+                                                    options: "i"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            { $project: { first_name: 1, last_name: 1, avatar: 1, isOnline: 1 } }
+                        ],
+                        as: "userInfo"
+                    }
+                },
+                { $unwind: "$userInfo" },
+                {
+                    $match: {
+                        "userInfo._id": { $exists: true } // Ensure userInfo exists
+                    }
+                }
+            ])
             return users
+            
         } else {
-            const users = await User.find({ _id: { $ne: currentUser._id } },
-                { first_name: 1, last_name: 1, avatar: 1 }
-            )
+            const users = await this.usersLastMsgs(currentUser)
             return users
         }
     }
